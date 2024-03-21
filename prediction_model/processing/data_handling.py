@@ -1,5 +1,5 @@
 import os 
-import pansas as pd
+import pandas as pd
 import joblib
 from prediction_model.config import config
 
@@ -7,7 +7,7 @@ from prediction_model.config import config
 # Load dataset
 def load_dataset(file_name):
     file_path=os.path.join(config.DATAPATH,file_name)
-    _data = ps.read_csv(file_path)
+    _data = pd.read_csv(file_path)
     return _data
 
 # Serialization
@@ -22,7 +22,7 @@ def save_pipeline(pipeline_to_save):
 
 def load_pipeline(pipeline_to_load):
     save_path = os.path.join(config.SAVE_MODEL_PATH,config.MODEL_NAME)
-    loadeed_model=joblib.load(save_path)
+    loaded_model=joblib.load(save_path)
     print("Model has been loaded")
     return loaded_model
     
