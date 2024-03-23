@@ -1,4 +1,4 @@
-from sklearn.base import BaseEstimator , TransformerMixin
+from sklearn.base import BaseEstimator, TransformerMixin
 from prediction_model.config import config
 import numpy as np
 
@@ -19,7 +19,6 @@ class Mean_Imputer(BaseEstimator, TransformerMixin):
             X[col] = X[col].fillna(self.mean_dict[col])
         return X
 
-        
 
 class Mode_Imputer(BaseEstimator, TransformerMixin):
     def __init__(self, variable=None):
@@ -38,37 +37,32 @@ class Mode_Imputer(BaseEstimator, TransformerMixin):
         return X
 
 
-
-class DomainProcessing(BaseEstimator ,TransformerMixin):
-    def __init__(self, variable_to_modify = None , variable_to_add= None):
+class DomainProcessing(BaseEstimator, TransformerMixin):
+    def __init__(self, variable_to_modify=None, variable_to_add=None):
         self.variable_to_modify = variable_to_modify
         self.variable_to_add = variable_to_add
 
-    def fit(self,X,y= None):
+    def fit(self, X, y=None):
         return self
 
-    def transform(self,X):
-        X=X.copy()
+    def transform(self, X):
+        X = X.copy()
         for feature in self.variable_to_modify:
             X[feature] = X[feature] + X[self.variable_to_add]
         return X
 
 
-
-
-class Drop_column(BaseEstimator ,TransformerMixin):
-    def __init__(self, variable_to_drop = None):
+class Drop_column(BaseEstimator, TransformerMixin):
+    def __init__(self, variable_to_drop=None):
         self.variable_to_drop = variable_to_drop
 
-
-    def fit(self,X,y= None):
+    def fit(self, X, y=None):
         return self
 
-    def transform(self,X):
-        X=X.copy()
+    def transform(self, X):
+        X = X.copy()
         X = X.drop(columns=self.variable_to_drop)
         return X
-
 
 
 class LabelEncoder(BaseEstimator, TransformerMixin):
@@ -90,11 +84,10 @@ class LabelEncoder(BaseEstimator, TransformerMixin):
         return X
 
 
-
 class LogTransforms(BaseEstimator, TransformerMixin):
     def __init__(self, variable=None):
         self.variable = variable
-        
+
     def fit(self, X, y=None):
         return self
 
@@ -103,8 +96,3 @@ class LogTransforms(BaseEstimator, TransformerMixin):
         for feat in self.variable:
             X[feat] = np.log(X[feat])
         return X
-
-
-
-
-    
