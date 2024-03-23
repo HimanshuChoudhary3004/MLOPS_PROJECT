@@ -2,7 +2,7 @@ include *.txt
 include *.md
 include *.py
 recursive-include ./prediction_model/*
-include prediction_model/datasets/*.csv
+include prediction_model/dataset/*.csv
 include prediction_model/trained_models/*.pkl
 
 
