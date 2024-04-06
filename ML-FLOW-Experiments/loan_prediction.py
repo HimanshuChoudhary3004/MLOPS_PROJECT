@@ -1,14 +1,19 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
-from matplotlib import pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn import metrics
 import mlflow
 import os
+import uuid
+
+# Set the MLflow tracking URI
+mlflow.set_tracking_uri("http://127.0.0.1:5001/")
 
 
 def loan_prediction():
@@ -32,7 +37,7 @@ def loan_prediction():
         lambda x: x.clip(*x.quantile([0.5, 0.95]))
     )
 
-    # Log transformationa and Domain Processing
+    # Log transformation and Domain Processing
     df["TotalIncome"] = df["ApplicantIncome"] + df["CoapplicantIncome"]
     df["TotalIncome"] = pd.to_numeric(df["TotalIncome"], errors="coerce").fillna(0)
     df["TotalIncome"] = np.log(df["TotalIncome"])
@@ -49,6 +54,7 @@ def loan_prediction():
         df[col] = le.fit_transform(df[col])
 
     # Encoding target columns
+    le = LabelEncoder()
     df["Loan_Status"] = le.fit_transform(df["Loan_Status"])
 
     # Train test split
@@ -60,7 +66,6 @@ def loan_prediction():
     )
 
     # Random Forest classification
-
     RF = RandomForestClassifier()
     param_grid_rf = {
         "n_estimators": [200, 400, 700],
@@ -102,8 +107,7 @@ def loan_prediction():
 
     Log_model.fit(X_train, y_train)
 
-    # Decison Tree classifier
-
+    # Decision Tree classifier
     DT = DecisionTreeClassifier(random_state=42)
     param_grid_dt = {
         "criterion": ["gini", "entropy"],
@@ -123,54 +127,63 @@ def loan_prediction():
     DT_model.fit(X_train, y_train)
 
     # Setting Experiment
-
     mlflow.set_experiment("loan_prediction")
 
-    # Model Evalution Metrics
-    def eval(actual, predicted):
+    # Model Evaluation Metrics
+    def eval_metrics(actual, predicted, file_path):
         accuracy = metrics.accuracy_score(actual, predicted)
         f1 = metrics.f1_score(actual, predicted)
         fpr, tpr, _ = metrics.roc_curve(actual, predicted)
         auc = metrics.auc(fpr, tpr)
         plt.figure(figsize=(8, 8))
-        plt.plot(fpr, tpr, color="blue", label="ROC curve area =%.2f" % auc)
+        plt.plot(fpr, tpr, color="blue", label=f"ROC curve area = {auc:.2f}")
         plt.plot([0, 1], [0, 1], linestyle="--", color="black")
         plt.xlim([0, 1])
         plt.ylim([0, 1])
         plt.xlabel("False Positive Rate")
         plt.ylabel("True Positive Rate")
         plt.legend(loc="upper left")
-        # save plot
-        os.makedirs("plots", exist_ok=True)
-        plt.savefig("plots/ROC_curve.png")
-        # close plot
+        mlflow_plots_dir = os.path.join(os.getcwd(), "mlflow_plots")
+        os.makedirs(mlflow_plots_dir, exist_ok=True)
+        plt.savefig(file_path)
         plt.close()
         return (accuracy, f1, auc)
 
-    def mlflow_logging(model, X, y, name):
+    def plot_roc_curve(actual, predicted, file_path):
+        fpr, tpr, _ = metrics.roc_curve(actual, predicted)
+        auc = metrics.auc(fpr, tpr)
+        plt.figure(figsize=(8, 8))
+        plt.plot(fpr, tpr, color="blue", label=f"ROC curve area = {auc:.2f}")
+        plt.plot([0, 1], [0, 1], linestyle="--", color="black")
+        plt.xlim([0, 1])
+        plt.ylim([0, 1])
+        plt.xlabel("False Positive Rate")
+        plt.ylabel("True Positive Rate")
+        plt.legend(loc="upper left")
+        plt.savefig(file_path)
+        plt.close()
 
+    def mlflow_logging(model, X, y, name):
+        mlflow_plots_dir = os.path.join(os.getcwd(), "mlflow_plots")
         with mlflow.start_run() as run:
-            run = mlflow.active_run()
             run_id = run.info.run_id
             mlflow.set_tag("run_id", run_id)
             pred = model.predict(X)
-            # metric
-            (accuracy, f1, auc) = eval(y, pred)
-            # Logging best parameters from GridSearch
-            # mlflow.log_params("f'{model}Best_parametet",model.best_params_)
-            # Log the metrics
+            accuracy, f1, auc = eval_metrics(y, pred, os.path.join(mlflow_plots_dir, f"{name}_{run_id}.png"))
             mlflow.log_metric("Mean CV Score", model.best_score_)
             mlflow.log_metric("accuracy", accuracy)
             mlflow.log_metric("f1", f1)
             mlflow.log_metric("auc", auc)
-
-            # Logging artifacts and models
-            mlflow.log_artifacts("plots")
-
+            os.makedirs(mlflow_plots_dir, exist_ok=True)
+            filename = f"{name}_{run_id}.png"
+            plot_roc_curve(y, pred, os.path.join(mlflow_plots_dir, filename))
+            mlflow.log_artifact(os.path.join(mlflow_plots_dir, filename))
+            mlflow.log_params(model.best_params_)
             mlflow.sklearn.log_model(model, name)
             print(f"{name} accuracy: {accuracy} f1: {f1} auc: {auc}")
 
-            mlflow.end_run()
+    mlflow_plots_dir = os.path.join(os.getcwd(), "mlflow_plots")
+    os.makedirs(mlflow_plots_dir, exist_ok=True)
 
     mlflow_logging(grid_forest, X_test, y_test, "RandomForestClassifier")
     mlflow_logging(Log_model, X_test, y_test, "LogisticRegression")
