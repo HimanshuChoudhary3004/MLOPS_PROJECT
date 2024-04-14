@@ -5,17 +5,9 @@ import os
 import sys
 
 
-# Get the absolute path of the current script file
-dir = os.path.abspath(__file__)
+model_name = 'RF_loan_model.joblib'
 
-# Append the parent directory of the current script to the Python path
-sys.path.append(os.path.dirname(os.path.dirname(dir)))
-
-path_to_model = 'RF_loan_model.joblib'
-
-with open(path_to_model, 'rb') as file:
-    model = joblib.load(file)
-
+model = joblib.load(model_name)
 
 
 def prediction(Gender,Married,Dependents,Education,Self_Employed,ApplicantIncome,CoapplicantIncome,LoanAmount,Loan_Amount_Term,
