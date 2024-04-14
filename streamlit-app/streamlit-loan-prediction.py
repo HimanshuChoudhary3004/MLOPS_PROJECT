@@ -1,10 +1,25 @@
 import streamlit as st 
 import numpy as np 
 import joblib
+import os
 
-model_name = 'RF_loan_model.joblib'
-model = joblib.load(model_name)
+# Construct the full file path to the model file
+model_file_path = os.path.join(os.getcwd(), 'RF_loan_model.joblib')
 
+try:
+    # Attempt to load the model using the full file path
+    model = joblib.load(model_file_path)
+    st.write("Model loaded successfully!")
+except Exception as e:
+    # Print out any error messages or exceptions that occur during the loading process
+    st.error(f"Error loading the model: {e}")
+
+
+# Load the model
+#model = joblib.load(model_path)
+
+
+# Rest of your code...
 
 
 def prediction(Gender,Married,Dependents,Education,Self_Employed,ApplicantIncome,CoapplicantIncome,LoanAmount,Loan_Amount_Term,

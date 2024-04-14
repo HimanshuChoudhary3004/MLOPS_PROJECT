@@ -6,4 +6,4 @@ pip install -r requirements.txt
 
 streamlit hello
 
-streamlit run app.py
+streamlit run streamlit-loan-prediction.py
