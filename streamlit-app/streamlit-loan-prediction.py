@@ -10,7 +10,7 @@ dir = os.path.abspath(__file__)
 
 # Append the parent directory of the current script to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(dir)))
-path_to_model = '. /RF_loan_model.joblib'
+path_to_model = 'RF_loan_model.joblib'
 
 model = joblib.load(path_to_model)
 
