@@ -2,6 +2,8 @@ import streamlit as st
 import numpy as np 
 import joblib
 import os
+import sys
+from utils import wrangle
 
 # Get the absolute path of the current script file
 dir = os.path.abspath(__file__)
@@ -10,6 +12,7 @@ dir = os.path.abspath(__file__)
 sys.path.append(os.path.dirname(os.path.dirname(dir)))
 path_to_model = '. /RF_loan_model.joblib'
 
+model = joblib.load(path_to_model)
 
 
 def prediction(Gender,Married,Dependents,Education,Self_Employed,ApplicantIncome,CoapplicantIncome,LoanAmount,Loan_Amount_Term,
