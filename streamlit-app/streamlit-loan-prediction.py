@@ -3,23 +3,17 @@ import numpy as np
 import joblib
 import os
 
-# Construct the full file path to the model file
+# Constructing the full file path to the model file
 model_file_path = os.path.join(os.getcwd(), 'RF_loan_model.joblib')
 
 try:
-    # Attempt to load the model using the full file path
+    # Attempting to load the model using the full file path
     model = joblib.load(model_file_path)
     st.write("Model loaded successfully!")
 except Exception as e:
     # Print out any error messages or exceptions that occur during the loading process
     st.error(f"Error loading the model: {e}")
 
-
-# Load the model
-#model = joblib.load(model_path)
-
-
-# Rest of your code...
 
 
 def prediction(Gender,Married,Dependents,Education,Self_Employed,ApplicantIncome,CoapplicantIncome,LoanAmount,Loan_Amount_Term,
@@ -95,7 +89,7 @@ def main():
         if result == "Approved":
             st.success("your Loan application is approved")
         else:
-            st.error("your Loan application  is not Rejected")
+            st.error("your Loan application  is Rejected")
 
 if __name__ == "__main__":
     main()
