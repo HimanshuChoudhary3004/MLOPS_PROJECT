@@ -1,3 +1,9 @@
 venv/
 ML-FLOW-Experiments/mlflow_venv/
 ML-FLOW-Experiments/mlruns/
+mlruns/
+ML-FLOW-Experiments/__pycache__/
+FASTAPI/fa-venv/
+streamlit-app/st-venv/
+prediction_model/__pycache__/predict.cpython-312.pyc/
+tests/__pycache__/test_prediction.cpython-312-pytest-8.1.1.pyc/
