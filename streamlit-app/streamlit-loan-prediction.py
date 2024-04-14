@@ -3,16 +3,12 @@ import numpy as np
 import joblib
 import os
 
-# Constructing the full file path to the model file
-model_file_path = os.path.join(os.getcwd(), 'RF_loan_model.joblib')
+# Get the absolute path of the current script file
+dir = os.path.abspath(__file__)
 
-try:
-    # Attempting to load the model using the full file path
-    model = joblib.load(model_file_path)
-    st.write("Model loaded successfully!")
-except Exception as e:
-    # Print out any error messages or exceptions that occur during the loading process
-    st.error(f"Error loading the model: {e}")
+# Append the parent directory of the current script to the Python path
+sys.path.append(os.path.dirname(os.path.dirname(dir)))
+path_to_model = '. /RF_loan_model.joblib'
 
 
 
