@@ -3,7 +3,7 @@ import numpy as np
 import joblib
 import os
 import sys
-from utils import wrangle
+
 
 # Get the absolute path of the current script file
 dir = os.path.abspath(__file__)
