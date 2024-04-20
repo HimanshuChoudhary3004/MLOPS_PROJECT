@@ -6,7 +6,7 @@ import sys
 
 
 #model_name = 'RF_loan_model.joblib'
-model_name = 'https://raw.githubusercontent.com'
+model_name = 'https://github.com/HimanshuChoudhary3004/MLOPS_PROJECT/blob/main/streamlit-app/RF_loan_model.joblib'
 
 model = joblib.load(model_name)
 
