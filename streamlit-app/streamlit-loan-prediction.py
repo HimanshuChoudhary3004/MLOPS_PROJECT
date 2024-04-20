@@ -5,7 +5,8 @@ import os
 import sys
 
 
-model_name = 'RF_loan_model.joblib'
+#model_name = 'RF_loan_model.joblib'
+model_name = 'https://raw.githubusercontent.com'
 
 model = joblib.load(model_name)
 
