@@ -7,9 +7,16 @@ import wget
 
 
 model_name = 'RF_loan_model.joblib'
-file_url = 'https://github.com/HimanshuChoudhary3004/MLOPS_PROJECT/blob/main/streamlit-app/RF_loan_model.joblib'
+file_url = 'https://github.com/HimanshuChoudhary3004/MLOPS_PROJECT/raw/main/streamlit-app/RF_loan_model.joblib'
+
+# Download the file
 wget.download(file_url)
-model = joblib.load(model_name)
+
+# Specify the correct file path
+file_path = os.path.join(os.getcwd(), model_name)
+
+# Load the model
+model = joblib.load(file_path)
 
 
 def prediction(Gender,Married,Dependents,Education,Self_Employed,ApplicantIncome,CoapplicantIncome,LoanAmount,Loan_Amount_Term,
