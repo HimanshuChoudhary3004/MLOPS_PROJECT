@@ -7,3 +7,5 @@ pip install -r requirements.txt
 streamlit hello
 
 streamlit run streamlit-loan-prediction.py
+
+https://mlopsproject-qx72gznvdpudltapzckfzg.streamlit.app/
