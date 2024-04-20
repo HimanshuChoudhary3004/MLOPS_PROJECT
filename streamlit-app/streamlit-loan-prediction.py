@@ -3,11 +3,12 @@ import numpy as np
 import joblib
 import os
 import sys
+import wget
 
 
-#model_name = 'RF_loan_model.joblib'
-model_name = 'https://github.com/HimanshuChoudhary3004/MLOPS_PROJECT/blob/main/streamlit-app/RF_loan_model.joblib'
-
+model_name = 'RF_loan_model.joblib'
+file_url = 'https://github.com/HimanshuChoudhary3004/MLOPS_PROJECT/blob/main/streamlit-app/RF_loan_model.joblib'
+wget.download(file_url)
 model = joblib.load(model_name)
 
 
